@@ -24,7 +24,7 @@ public class Printer {
             }
             System.out.println("Resolvido em " + (endTime - startTime) + " milissegundos!");
         } else {
-            System.out.println("Solution not found within the depth limit.");
+            System.out.println("Solução não encontrada dentro do limite de profundidade.");
         }
     }
 
@@ -70,5 +70,4 @@ public class Printer {
 
         System.out.print(" ".repeat(outerSpaces) + content + " ".repeat(outerSpaces) + " ");
     }
-
 }

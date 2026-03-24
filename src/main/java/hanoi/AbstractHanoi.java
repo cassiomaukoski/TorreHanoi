@@ -1,6 +1,7 @@
 package hanoi;
 
 import search.Node;
+import search.Problem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,60 +10,58 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public abstract class AbstractHanoi {
+    
+    public static int numDisks = 5;
 
-    protected static final int numDisks = 7;
+    public static Problem<State> createHanoiProblem(int numDisks) {
+        AbstractHanoi.numDisks = numDisks;
+        return new Problem<>(getInitialState(), getGoalTest(), getSuccessorFunction());
+    }
 
-    protected static State getInitialState() {
+    private static State getInitialState() {
         List<Stack<Integer>> towers = new ArrayList<>();
         for (int i = 0; i < 3; i++) towers.add(new Stack<>());
-
-        for (int i = numDisks; i >= 1; i--) {
-            towers.getFirst().push(i);
-        }
+        for (int i = numDisks; i >= 1; i--) towers.getFirst().push(i);
         return new State(towers);
     }
 
-    protected static Predicate<State> getGoalTest() {
-        return e -> e.towers().get(2).size() == numDisks;
+    private static Predicate<State> getGoalTest() {
+        return s -> s.towers().get(2).size() == numDisks;
     }
 
-    protected static Function<State, List<Node<State>>> getSuccessorFunction() {
-        return e -> {
-            List<Node<State>> list = new ArrayList<>();
-
+    private static Function<State, List<Node<State>>> getSuccessorFunction() {
+        return state -> {
+            List<Node<State>> successors = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
-                if (e.towers().get(i).isEmpty()) continue;
-
+                if (state.towers().get(i).isEmpty()) continue;
                 for (int j = 0; j < 3; j++) {
                     if (i == j) continue;
+                    
+                    Stack<Integer> from = state.towers().get(i);
+                    Stack<Integer> to = state.towers().get(j);
 
-                    Stack<Integer> origin = e.towers().get(i);
-                    Stack<Integer> destination = e.towers().get(j);
-
-                    if (destination.isEmpty() || origin.peek() < destination.peek()) {
-                        List<Stack<Integer>> newTowers = cloneTowers(e.towers());
-
-                        int disk = newTowers.get(i).pop();
-                        newTowers.get(j).push(disk);
-
-                        String move = "Mover disco " + disk + " de " + towerName(i) + " para " + towerName(j);
-
-                        list.add(new Node<>(new State(newTowers), null, 0, move));
+                    if (to.isEmpty() || from.peek() < to.peek()) {
+                        List<Stack<Integer>> nextTowers = cloneTowers(state.towers());
+                        int disk = nextTowers.get(i).pop();
+                        nextTowers.get(j).push(disk);
+                        
+                        String move = "Mover disco " + disk + " de " + (char)('A'+i) + " para " + (char)('A'+j);
+                        successors.add(new Node<>(new State(nextTowers), null, 0, move)); // Nó "molde"
                     }
                 }
             }
-            return list;
+            return successors;
         };
     }
 
     private static List<Stack<Integer>> cloneTowers(List<Stack<Integer>> towers) {
-        List<Stack<Integer>> newTowers = new ArrayList<>();
+        List<Stack<Integer>> copy = new ArrayList<>();
         for (Stack<Integer> t : towers) {
-            Stack<Integer> newTower = new Stack<>();
-            newTower.addAll(t);
-            newTowers.add(newTower);
+            Stack<Integer> nt = new Stack<>();
+            nt.addAll(t);
+            copy.add(nt);
         }
-        return newTowers;
+        return copy;
     }
 
     public static String towerName(int i) {
