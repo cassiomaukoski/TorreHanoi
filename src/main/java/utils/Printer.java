@@ -1,7 +1,8 @@
 package utils;
 
+import hanoi.AbstractHanoi;
 import hanoi.State;
-import iterativedeepeningsearch.Node;
+import search.Node;
 
 import java.util.List;
 import java.util.Stack;
@@ -47,7 +48,7 @@ public class Printer {
         }
 
         for (int i = 0; i < 3; i++) {
-            String label = towerName(i);
+            String label = AbstractHanoi.towerName(i);
             System.out.print(" ".repeat(maxDisks + 1) + label + " ".repeat(maxDisks + 1) + " ");
         }
         System.out.println();
@@ -68,15 +69,6 @@ public class Printer {
         int outerSpaces = max - size + 1;
 
         System.out.print(" ".repeat(outerSpaces) + content + " ".repeat(outerSpaces) + " ");
-    }
-
-    private static String towerName(int i) {
-        return switch (i) {
-            case 0 -> "A";
-            case 1 -> "B";
-            case 2 -> "C";
-            default -> "?";
-        };
     }
 
 }

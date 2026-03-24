@@ -1,31 +1,29 @@
 package hanoi;
 
-import search.iterativedeepening.IDS;
+import search.breadthfirst.BFS;
 import search.Node;
 import utils.Printer;
 
 import java.util.List;
 
-public class HanoiIDSMain extends AbstractHanoi {
+public class HanoiBFSMain extends AbstractHanoi {
 
     static void main() {
-        final int maxDepthLimit = (int) Math.pow(2, numDisks) - 1;
 
         State initialState = getInitialState();
-        IDS<State> ids = new IDS<>();
+        BFS<State> bfs = new BFS<>();
 
-        System.out.println("-------------------- TORRE DE HANOI COM IDS ---------------------");
+        System.out.println("-------------------- TORRE DE HANOI COM BFS ---------------------");
         System.out.println("Procurando uma solução com " + numDisks + " discos...");
-        System.out.println("Profundidade máxima calculada: " + maxDepthLimit);
+        System.out.println("Aviso: BFS com muitos discos pode consumir muita memória!");
         System.out.println("-----------------------------------------------------------------");
         
         long startTime = System.currentTimeMillis();
         
-        List<Node<State>> path = ids.search(
+        List<Node<State>> path = bfs.search(
                 initialState, 
                 getGoalTest(),
-                getSuccessorFunction(), 
-                maxDepthLimit
+                getSuccessorFunction()
         );
         
         long endTime = System.currentTimeMillis();

@@ -1,10 +1,13 @@
-package iterativedeepeningsearch;
+package search.iterativedeepening;
+
+import search.AbstractSearch;
+import search.Node;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class IDS<T> {
+public class IDS<T> extends AbstractSearch<T> {
 
     public List<Node<T>> search(
             T initialState,
@@ -64,15 +67,5 @@ public class IDS<T> {
         }
 
         return null;
-    }
-
-    private List<Node<T>> buildPath(Node<T> node) {
-        List<Node<T>> path = new ArrayList<>();
-        while (node != null) {
-            path.add(node);
-            node = node.parent();
-        }
-        Collections.reverse(path);
-        return path;
     }
 }
